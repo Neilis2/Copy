@@ -717,14 +717,18 @@ function isPremium() {
 }
 
 // ══ PLAN ACCESS ══
-function isModuleAccessible(modIndex, section) {
+function isModuleAccessible(modIndex, section, mods) {
   const plan = state.user.plan;
   if (plan === 'completo' || isPremium()) return true;
-  if (plan === 'enfocado') {
-    if (section === 'taal') return true;
-    return modIndex < 2;
+  // First 2 modules always accessible for all plans
+  if (modIndex < 2) return true;
+  // Enfocado: all TAAL unlocked without restriction
+  if (plan === 'enfocado' && section === 'taal') return true;
+  // Progressive unlock: accessible only when previous module is completed (≥80%)
+  if (mods && mods[modIndex - 1]) {
+    return modPct(mods[modIndex - 1].id) >= 80;
   }
-  return modIndex < 2;
+  return false;
 }
 
 // ══ WEEKLY EXAM LIMIT ══
@@ -815,27 +819,25 @@ function renderGrid(containerId, mods, section) {
   c.innerHTML = mods.map((mod, i) => {
     const pct        = modPct(mod.id);
     const isDone     = pct >= 80;
+    const accessible = isModuleAccessible(i, section, mods);
     const prevDone   = i === 0 || modPct(mods[i-1].id) >= 80;
-    const accessible = isModuleAccessible(i, section);
     const isCurr     = !isDone && prevDone && mod.ready && accessible;
-    const isPlanLock = !accessible && mod.ready;
-    const isSeqLock  = accessible && !isDone && !isCurr && mod.ready;
+    const isSeqLock  = !accessible && mod.ready;
     const soon       = !mod.ready;
 
     let cls = 'topic-oval';
-    if (isDone)       cls += ' done';
-    else if (isCurr)  cls += ' curr';
-    else if (isPlanLock || isSeqLock) cls += ' locked';
-    else if (soon)    cls += ' soon';
+    if (isDone)         cls += ' done';
+    else if (isCurr)    cls += ' curr';
+    else if (isSeqLock) cls += ' locked';
+    else if (soon)      cls += ' soon';
 
     const sub = soon ? 'Próx.' : `${pct}%`;
 
     let fn;
-    if (soon)          fn = `showToast('¡Próximamente!')`;
-    else if (isPlanLock) fn = `showUpgradeNudge()`;
-    else if (isSeqLock)  fn = `showToast('Completa el módulo anterior al 80% primero')`;
-    else if (mod.url)    fn = `window.location.href='${mod.url}'`;
-    else                 fn = `showToast('¡Próximamente!')`;
+    if (soon)           fn = `showToast('¡Próximamente!')`;
+    else if (isSeqLock) fn = `showToast('Completa el módulo anterior al 80% primero')`;
+    else if (mod.url)   fn = `window.location.href='${mod.url}'`;
+    else                fn = `showToast('¡Próximamente!')`;
 
     return `<div class="${cls}" onclick="${fn}">
       <div class="topic-emoji">${mod.emoji}</div>

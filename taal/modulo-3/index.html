@@ -27,7 +27,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--cream);
 .stats-row{display:flex;gap:12px;margin-top:16px;}
 .stat-pill{flex:1;padding:10px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;text-align:center;}
 .stat-pill-num{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;line-height:1;}
-.stat-pill-num.done{color:var(--green);}.stat-pill-num.locked{color:var(--muted);}.stat-pill-num.total{color:var(--orange);}
+.stat-pill-num.done{color:var(--green);}.stat-pill-num.locked{color:var(--muted);}.stat-pill-num.total{color:var(--orange);}.stat-pill-num.errors{color:#e8455a;}.stat-pill.clickable{cursor:pointer;transition:opacity .15s;}.stat-pill.clickable:active{opacity:.7;}
 .stat-pill-label{font-size:10px;color:rgba(253,246,236,0.4);text-transform:uppercase;letter-spacing:0.8px;margin-top:3px;}
 .lessons-wrap{padding:16px 16px 40px;display:flex;flex-direction:column;gap:10px;max-width:600px;margin:0 auto;}
 .les-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--navy2);border-radius:18px;border:1px solid var(--border);cursor:pointer;transition:all var(--ease);text-decoration:none;color:inherit;position:relative;overflow:hidden;}
@@ -84,7 +84,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--cream);
   <div class="stats-row">
     <div class="stat-pill"><div class="stat-pill-num done" id="stat-done">0</div><div class="stat-pill-label">Completadas</div></div>
     <div class="stat-pill"><div class="stat-pill-num locked" id="stat-locked">7</div><div class="stat-pill-label">Bloqueadas</div></div>
-    <div class="stat-pill"><div class="stat-pill-num total">7</div><div class="stat-pill-label">Total</div></div>
+    <div class="stat-pill clickable" onclick="handleErrorClick()"><div class="stat-pill-num errors" id="stat-errors">0</div><div class="stat-pill-label">Errores</div></div>
   </div>
 </div>
 <div class="lessons-wrap" id="lessons-list"></div>
@@ -99,6 +99,15 @@ const LESSONS=[
   {num:7,file:'les-7.html',icon:'⏰',title:'¿Cuándo?',desc:"'s ochtends, gisteren, volgende week y más",xp:'+100 XP'},
 ];
 const KEY_PREFIX='slaagnl_m3_';
+const MODULE_ID='m3';
+function getErrors(){const e=JSON.parse(localStorage.getItem('slaagnl_errors')||'{}');return e[MODULE_ID]||0;}
+function handleErrorClick(){
+  const plan=localStorage.getItem('slaagnl_plan')||'libre';
+  const n=getErrors();
+  if(plan==='libre'){alert('🔒 Análisis de errores disponible desde el plan Enfocado.\n\nActualiza tu plan para ver tus errores y mejorar más rápido.');}
+  else if(plan==='enfocado'){alert(n===0?'✅ ¡Sin errores en este módulo! Sigue así.':`❌ Tienes ${n} error${n>1?'es':''} en este módulo.\n\nRevisa las lecciones donde cometiste errores para mejorar.`);}
+  else{alert(n===0?'✅ ¡Sin errores en este módulo! Sigue así.':`💪 Tienes ${n} error${n>1?'es':''} en este módulo.\n\n🔧 Ejercicios personalizados para corregirlos — ¡próximamente!`);}
+}
 function isDone(num){return localStorage.getItem(KEY_PREFIX+num)==='done';}
 function isPremium(){if(window.SLAAGNL_DISABLE_PLANS === true) return true; // TEMP: disable plans (free access)
   return localStorage.getItem('slaagnl_premium')==='true'||localStorage.getItem('slaagnl_plan')==='completo'||localStorage.getItem('slaagnl_plan')==='enfocado';}
@@ -140,6 +149,7 @@ function buildList(){
   document.getElementById('prog-pct').textContent=pct+'%';
   document.getElementById('stat-done').textContent=doneCount;
   document.getElementById('stat-locked').textContent=LESSONS.length-doneCount;
+  document.getElementById('stat-errors').textContent=getErrors();
   if(!isPremium()&&doneCount<LESSONS.length){
     const banner=document.createElement('div');
     banner.className='premium-banner';
