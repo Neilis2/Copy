@@ -659,16 +659,25 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals(
 
 function doRegister() {
   const t = T[currentLang] || T.es;
-  const name  = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const pass  = document.getElementById('reg-pass').value;
-  if (!name)        { alert(t.aName);  return; }
-  if (!email)       { alert(t.aEmail); return; }
+  const name = document.getElementById('a-reg-name').value.trim();
+  const age = document.getElementById('a-reg-age').value.trim();
+  const email = document.getElementById('a-reg-email').value.trim();
+  const pass = document.getElementById('a-reg-pass').value;
+  const country = document.getElementById('a-reg-country').value;
+  const examdate = document.getElementById('a-reg-examdate').value;
+
+  if (!name) { alert(t.aName); return; }
+  if (!email) { alert(t.aEmail); return; }
   if (pass.length < 6) { alert(t.aPass); return; }
-  localStorage.setItem('slaagnl_name',  name);
+
+  localStorage.setItem('slaagnl_name', name);
+  localStorage.setItem('slaagnl_age', age);
   localStorage.setItem('slaagnl_email', email);
-  localStorage.setItem('slaagnl_plan',  'libre');
+  localStorage.setItem('slaagnl_country', country);
+  localStorage.setItem('slaagnl_examdate', examdate);
+  localStorage.setItem('slaagnl_plan', 'libre');
   localStorage.setItem('slaagnl_streak', '0');
+
   openExamType();
 }
 
