@@ -315,23 +315,37 @@ footer { background: var(--navy); border-top: 1px solid var(--border); padding: 
 
 <!-- MODAL REGISTER -->
 <div class="modal-overlay" id="modal-register">
-  <div class="modal-box">
+  <div class="modal-box" style="max-width:380px;max-height:90vh;overflow-y:auto;">
     <button class="modal-close" onclick="closeModals()">✕</button>
     <img class="modal-lowie" src="assets/lowie.png" alt="Lowie">
     <div class="modal-title" id="reg-title"></div>
     <div class="modal-sub" id="reg-sub"></div>
+
     <div class="form-field">
       <label class="form-label" id="reg-l-name"></label>
-      <input class="form-input" id="reg-name" type="text">
+      <input class="form-input" id="reg-name" type="text" autocomplete="name">
+    </div>
+    <div class="form-field">
+      <label class="form-label" id="reg-l-age"></label>
+      <input class="form-input" id="reg-age" type="number" min="16" max="67" inputmode="numeric">
     </div>
     <div class="form-field">
       <label class="form-label" id="reg-l-email"></label>
-      <input class="form-input" id="reg-email" type="email">
+      <input class="form-input" id="reg-email" type="email" autocomplete="email">
     </div>
     <div class="form-field">
       <label class="form-label" id="reg-l-pass"></label>
-      <input class="form-input" id="reg-pass" type="password">
+      <input class="form-input" id="reg-pass" type="password" autocomplete="new-password">
     </div>
+    <div class="form-field">
+      <label class="form-label" id="reg-l-country"></label>
+      <select class="form-input" id="reg-country" style="appearance:none;-webkit-appearance:none;cursor:pointer;"></select>
+    </div>
+    <div class="form-field">
+      <label class="form-label" id="reg-l-examdate"></label>
+      <input class="form-input" id="reg-examdate" type="date" style="color-scheme:dark;">
+    </div>
+
     <button class="btn-modal" id="reg-btn" onclick="doRegister()"></button>
     <p class="modal-switch"><span id="reg-switch"></span> <a onclick="switchToLogin()" id="reg-switch-a"></a></p>
   </div>
