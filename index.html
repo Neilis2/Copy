@@ -321,32 +321,36 @@ footer { background: var(--navy); border-top: 1px solid var(--border); padding: 
     <div class="modal-title" id="reg-title"></div>
     <div class="modal-sub" id="reg-sub"></div>
 
-    <div class="form-field">
-      <label class="form-label" id="reg-l-name"></label>
-      <input class="form-input" id="reg-name" type="text" autocomplete="name">
+    <div class="field-group">
+      <label class="field-label" id="lbl-name"></label>
+      <input class="auth-input form-input" type="text" id="a-reg-name" autocomplete="name">
     </div>
-    <div class="form-field">
-      <label class="form-label" id="reg-l-age"></label>
-      <input class="form-input" id="reg-age" type="number" min="16" max="67" inputmode="numeric">
+    <div class="field-group">
+      <label class="field-label" id="lbl-age"></label>
+      <input class="auth-input form-input" type="number" id="a-reg-age" min="16" max="67" inputmode="numeric">
+      <span class="field-hint" id="hint-age"></span>
     </div>
-    <div class="form-field">
-      <label class="form-label" id="reg-l-email"></label>
-      <input class="form-input" id="reg-email" type="email" autocomplete="email">
+    <div class="field-group">
+      <label class="field-label" id="lbl-email"></label>
+      <input class="auth-input form-input" type="email" id="a-reg-email" autocomplete="email">
     </div>
-    <div class="form-field">
-      <label class="form-label" id="reg-l-pass"></label>
-      <input class="form-input" id="reg-pass" type="password" autocomplete="new-password">
+    <div class="field-group">
+      <label class="field-label" id="lbl-pass"></label>
+      <input class="auth-input form-input" type="password" id="a-reg-pass" autocomplete="new-password">
+      <span class="field-hint" id="hint-pass"></span>
     </div>
-    <div class="form-field">
-      <label class="form-label" id="reg-l-country"></label>
-      <select class="form-input" id="reg-country" style="appearance:none;-webkit-appearance:none;cursor:pointer;"></select>
+    <div class="field-group">
+      <label class="field-label" id="lbl-country"></label>
+      <select class="auth-input auth-select form-input" id="a-reg-country"></select>
     </div>
-    <div class="form-field">
-      <label class="form-label" id="reg-l-examdate"></label>
-      <input class="form-input" id="reg-examdate" type="date" style="color-scheme:dark;">
+    <div class="field-group">
+      <label class="field-label" id="lbl-examdate"></label>
+      <input class="auth-input form-input" type="date" id="a-reg-examdate">
+      <span class="field-hint" id="hint-examdate"></span>
     </div>
+    <div class="auth-err" id="err-reg"></div>
+    <button class="btn-modal" id="reg-submit-btn" onclick="doRegister()"></button>
 
-    <button class="btn-modal" id="reg-btn" onclick="doRegister()"></button>
     <p class="modal-switch"><span id="reg-switch"></span> <a onclick="switchToLogin()" id="reg-switch-a"></a></p>
   </div>
 </div>
