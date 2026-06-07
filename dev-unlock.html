@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SlaagNL — Dev Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1f3c;--navy2:#162d54;--orange:#f47c3a;--cream:#fdf6ec;--green:#2ecc8a;--red:#e8455a;--border:rgba(255,255,255,0.07);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--cream);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:16px;}
+h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--orange);margin-bottom:4px;}
+.sub{font-size:13px;color:rgba(253,246,236,0.4);margin-bottom:24px;}
+.btn{width:100%;max-width:340px;padding:16px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;}
+.btn-unlock{background:var(--orange);color:white;}
+.btn-lock{background:rgba(232,69,90,0.15);border:1.5px solid rgba(232,69,90,0.4);color:var(--red);}
+.btn-reset{background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:rgba(253,246,236,0.5);}
+.btn:active{transform:scale(0.97);}
+.status{font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;text-align:center;max-width:340px;width:100%;}
+.status.on{background:rgba(46,204,138,0.12);color:var(--green);border:1px solid rgba(46,204,138,0.25);}
+.status.off{background:rgba(232,69,90,0.1);color:var(--red);border:1px solid rgba(232,69,90,0.2);}
+.divider{width:100%;max-width:340px;height:1px;background:rgba(255,255,255,0.07);margin:8px 0;}
+.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(253,246,236,0.3);text-align:center;}
+</style>
+</head>
+<body>
+<h1>🛠 SlaagNL Dev Tools</h1>
+<div class="sub">Solo para desarrollo — elimina este archivo en producción</div>
+<div class="status" id="status-badge">...</div>
+<button class="btn btn-unlock" onclick="unlock()">🔓 Activar modo Premium (desbloquear todo)</button>
+<button class="btn btn-lock" onclick="lock()">🔒 Desactivar Premium (modo usuario normal)</button>
+<div class="divider"></div>
+<div class="label">Peligro</div>
+<button class="btn btn-reset" onclick="resetAll()">🗑 Borrar TODO el progreso (localStorage)</button>
+<script>
+function update(){
+  const isPremium=localStorage.getItem('slaagnl_premium')==='true';
+  const badge=document.getElementById('status-badge');
+  badge.textContent=isPremium?'✅ Modo Premium ACTIVO — todas las lecciones desbloqueadas':'❌ Modo Premium INACTIVO — acceso secuencial normal';
+  badge.className='status '+(isPremium?'on':'off');
+}
+function unlock(){localStorage.setItem('slaagnl_premium','true');update();alert('✅ Premium activado. Todos los módulos están desbloqueados.');}
+function lock(){localStorage.removeItem('slaagnl_premium');update();alert('🔒 Premium desactivado. Acceso secuencial normal.');}
+function resetAll(){
+  if(!confirm('⚠️ Esto borrará TODO el progreso de todos los módulos. ¿Seguro?'))return;
+  const keys=Object.keys(localStorage).filter(k=>k.startsWith('slaagnl_'));
+  keys.forEach(k=>localStorage.removeItem(k));
+  update();alert('🗑 Progreso borrado. Todo en cero.');
+}
+update();
+</script>
+</body>
+</html>
